@@ -1,8 +1,7 @@
 import React from 'react'
 
-const BarChart = () => {
-    // constant data for testing
-    const balance = 22;
+const BarChart = ({ balance }: { balance: number }) => {
+    // max amount for each is $100
     const maxAmount = 100;
 
     // calculate length of bar
