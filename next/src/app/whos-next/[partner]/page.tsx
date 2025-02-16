@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
 import { auth } from "src/lib/firebase";
 import { User } from "firebase/auth";
 import BarChart from "@components/BarChart"
@@ -18,7 +18,8 @@ const Expense = ({ email, amount }: {email:string, amount:number}) => {
   )
 }
 
-export default function Page() {
+export default function Page({ params }: { params: Promise<{ partner: string }>}) {
+  const {partner} = use(params);
     const [user, setUser] = useState<User | null>(null)
     const [transaction, setTransaction] = useState({
       email: '',
@@ -63,12 +64,13 @@ export default function Page() {
             e.preventDefault();
             setExpenses([...expenses, {who:transaction.email, amount:transaction.amount}])
         }
-
+  
     return (
       <div className="grid grid-cols-10">
-            <div id="user" className="col-span-3 h-screen bg-green-800">
+            <div id="user" className="col-span-3 h-screen bg-slate-200">
+              <h2>History with {partner}@{partner}.com</h2>
               {user?.email ?? 'no user'}
-              <p>{owe.toFixed(2)}</p>
+              <p>{owe.toFixed(2)}$</p>
               <BarChart balance={owe} />
             </div>
             <div id="expenses" className="col-start-4 col-span-7 h-screen bg-red-100">
