@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { auth } from "src/lib/firebase";
 import { User } from "firebase/auth";
+import BarChart from "@components/BarChart"
 
 interface Expense {
   who: string;
@@ -68,7 +69,7 @@ export default function Page() {
             <div id="user" className="col-span-3 h-screen bg-green-800">
               {user?.email ?? 'no user'}
               <p>{owe.toFixed(2)}</p>
-              {/* {owe} */}
+              <BarChart balance={owe} />
             </div>
             <div id="expenses" className="col-start-4 col-span-7 h-screen bg-red-100">
               <form onSubmit={handleSubmit} className="m-4 space-y-2">
