@@ -34,7 +34,7 @@ const BarChart = ({ balance }: { balance: number }) => {
                     left: `50%`,
                     top: '3px',
                     borderRadius: '5px',
-                    backgroundColor: 'red',
+                    backgroundColor: '#ff8a80',
                     transition: "width 0.3s ease",
                     transform: 'translateX(-100%)',
                     borderTopLeftRadius: '5px',
@@ -48,7 +48,7 @@ const BarChart = ({ balance }: { balance: number }) => {
                     left: `50%`,
                     top: '3px',
                     borderRadius: '5px',
-                    backgroundColor: "green",
+                    backgroundColor: "#81c784",
                     transition: "width 0.3s ease",
                     borderTopRightRadius: '5px',
                     borderBottomRightRadius: '5px'
