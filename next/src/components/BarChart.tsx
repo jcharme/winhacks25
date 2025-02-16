@@ -39,8 +39,7 @@ const BarChart = () => {
                     transition: "width 0.3s ease",
                     transform: 'translateX(-100%)',
                     borderTopLeftRadius: '5px',
-                    borderBottomLeftRadius: '5px',
-                    
+                    borderBottomLeftRadius: '5px',        
                 }}
             ></div>
             <div className='absolute' style = {{
@@ -58,7 +57,7 @@ const BarChart = () => {
             ></div>
             <span
             className='absolute left-1/2 transform -translate-x-1/2'>
-            {balance < 0 ? `Owes $${Math.abs(balance)}` : `Owed $${balance}`}
+            {/* {balance < 0 ? `Owes $${Math.abs(balance)}` : `Owed $${balance}`} */}
             </span>
         </div>
     );
