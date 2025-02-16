@@ -2,7 +2,7 @@ import React from 'react'
 
 const BarChart = () => {
     // constant data for testing
-    const balance = 100;
+    const balance = 22;
     const maxAmount = 100;
 
     // calculate length of bar
@@ -11,10 +11,20 @@ const BarChart = () => {
 
     return (
         <div className='w-full relative'>
+            <div className='absolute' style={{
+                    height: '26px',
+                    width: '2px',
+                    left: '50%',
+                    backgroundColor: 'black',
+                    transform: 'translateX(-50%)'
+                }}
+            ></div>
+            
             <div className='absolute' style = {{
                     height: '20px',
                     width: `${leftWidth}%`,
                     left: `50%`,
+                    top: '3px',
                     backgroundColor: "red",
                     transition: "width 0.3s ease",
                     transform: 'translateX(-100%)'
@@ -24,6 +34,7 @@ const BarChart = () => {
                     height: '20px',
                     width: `${rightWidth}%`,
                     left: `50%`,
+                    top: '3px',
                     backgroundColor: "green",
                     transition: "width 0.3s ease",
                 }}
