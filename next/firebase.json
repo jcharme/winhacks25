@@ -5,6 +5,7 @@
   },
   "hosting": {
     "public": "public",
+    "site": "two-cents",
     "ignore": [
       "firebase.json",
       "**/.*",
