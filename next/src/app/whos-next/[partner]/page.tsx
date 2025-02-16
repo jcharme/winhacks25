@@ -37,20 +37,19 @@ export default function Page() {
     amount: 12.20
   }])
 
-    const [owe, setOwe] = useState(expenses.length);
-
+    const [owe, setOwe] = useState(0);
+    // Listen for authentication state changes
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged(setUser);
+      return () => unsubscribe() // Cleanup on component unmount
+    }, [])
     useEffect(() => {
       let amount:number = 0;
       expenses.filter((e) => {return e.who == user?.email}).forEach((e) => {amount += e.amount});
       expenses.filter((e) => {return e.who != user?.email}).forEach((e) => {amount -= e.amount});
       setOwe(amount);
-    }, [expenses])
+    }, [expenses, user])
 
-    // Listen for authentication state changes
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(setUser)
-      return () => unsubscribe() // Cleanup on component unmount
-    }, [])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
             const { name, value } = e.target;
@@ -68,7 +67,7 @@ export default function Page() {
       <div className="grid grid-cols-10">
             <div id="user" className="col-span-3 h-screen bg-green-800">
               {user?.email ?? 'no user'}
-              <p>{owe}</p>
+              <p>{owe.toFixed(2)}</p>
               {/* {owe} */}
             </div>
             <div id="expenses" className="col-start-4 col-span-7 h-screen bg-red-100">
