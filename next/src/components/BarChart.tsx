@@ -10,8 +10,9 @@ const BarChart = () => {
     const rightWidth = balance > 0 ? Math.min(balance / maxAmount * 50, 50) : 0;
 
     return (
-        <div className='w-full relative'>
-            <div className='absolute' style={{
+        <div className='bar-chart w-full relative'>
+            <div className='center-line z-10' style={{
+                    position: 'absolute',
                     height: '26px',
                     width: '2px',
                     left: '50%',
@@ -19,24 +20,40 @@ const BarChart = () => {
                     transform: 'translateX(-50%)'
                 }}
             ></div>
-            
-            <div className='absolute' style = {{
+            {/* <div className='absolute' style={{
+                    height: '2px',
+                    width: '100%',
+                    top: '12px', // Center the horizontal line vertically within the bars
+                    backgroundColor: 'gray',
+                    transform: 'translateY(-50%)'
+                }}
+            ></div> */}
+            <div className='bar left-bar' style = {{
+                    position: 'absolute',
                     height: '20px',
                     width: `${leftWidth}%`,
                     left: `50%`,
                     top: '3px',
-                    backgroundColor: "red",
+                    borderRadius: '5px',
+                    backgroundColor: 'red',
                     transition: "width 0.3s ease",
-                    transform: 'translateX(-100%)'
+                    transform: 'translateX(-100%)',
+                    borderTopLeftRadius: '5px',
+                    borderBottomLeftRadius: '5px',
+                    
                 }}
             ></div>
             <div className='absolute' style = {{
+                    position: 'absolute',
                     height: '20px',
                     width: `${rightWidth}%`,
                     left: `50%`,
                     top: '3px',
+                    borderRadius: '5px',
                     backgroundColor: "green",
                     transition: "width 0.3s ease",
+                    borderTopRightRadius: '5px',
+                    borderBottomRightRadius: '5px'
                 }}
             ></div>
             <span
