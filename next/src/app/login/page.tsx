@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { auth } from "@lib/firebase";
 
@@ -44,6 +44,7 @@ export default function Login() {
     }
 
     const handleSignOut = (e: FormEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         signOut(auth)
             .then(() => {
                 setUser(null);

@@ -1,8 +1,8 @@
 "use client";
 
-import { ChangeEvent, FormEvent, use, useEffect, useState } from "react";
-import { auth } from "src/lib/firebase";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { User } from "firebase/auth";
+import { auth } from "@lib/firebase";
 import BarChart from "@components/BarChart"
 
 interface Expense {
@@ -18,8 +18,7 @@ const Expense = ({ email, amount }: {email:string, amount:number}) => {
   )
 }
 
-export default function Page({ params }: { params: Promise<{ partner: string }>}) {
-  const {partner} = use(params);
+export default function Page() {
     const [user, setUser] = useState<User | null>(null)
     const [transaction, setTransaction] = useState({
       email: '',
@@ -69,7 +68,7 @@ export default function Page({ params }: { params: Promise<{ partner: string }>}
       <div className="grid grid-cols-10">
             <div id="user" className="col-span-3 h-screen bg-blue-100 p-2">
               <h2 className="text-xl">{user != null ? `signed in as ${user?.email}` : 'not signed in'} </h2>
-              <h2>viewing history with {partner}@{partner}.com</h2>
+              {/* <h2>viewing history with {partner}@{partner}.com</h2> */}
               {/* { ?? 'no user'} */}
               <p className="text-xl text-center mt-4">{owe.toFixed(2)}$</p>
               <p className="block text-center">{owe < 0 ? 'Your turn!' : "Their treat!"}</p>
