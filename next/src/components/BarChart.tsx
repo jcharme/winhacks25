@@ -2,25 +2,36 @@ import React from 'react'
 
 const BarChart = () => {
     // constant data for testing
-    const balance = -50;
-    
-    // change bar color 
-    const barColour = balance < 0 ? 'red' : 'green';
+    const balance = 100;
+    const maxAmount = 100;
 
     // calculate length of bar
-    const barWidth = Math.min(Math.abs(balance), 100); // prevent from exceeding $100
+    const leftWidth = balance < 0 ? Math.min(Math.abs(balance) / maxAmount * 50, 50) : 0;
+    const rightWidth = balance > 0 ? Math.min(balance / maxAmount * 50, 50) : 0;
 
     return (
-        <div>
-            <div
-                style = {{
+        <div className='w-full relative'>
+            <div className='absolute' style = {{
                     height: '20px',
-                    width: '%{barWidth}%',
-                    backgroundColor: barColour,
-                    marginBottom: 10,
+                    width: `${leftWidth}%`,
+                    left: `50%`,
+                    backgroundColor: "red",
+                    transition: "width 0.3s ease",
+                    transform: 'translateX(-100%)'
                 }}
             ></div>
-            <span>{balance < 0 ? `Owes ${Math.abs(balance)}` : `Owed ${balance}`}</span>
+            <div className='absolute' style = {{
+                    height: '20px',
+                    width: `${rightWidth}%`,
+                    left: `50%`,
+                    backgroundColor: "green",
+                    transition: "width 0.3s ease",
+                }}
+            ></div>
+            <span
+            className='absolute left-1/2 transform -translate-x-1/2'>
+            {balance < 0 ? `Owes $${Math.abs(balance)}` : `Owed $${balance}`}
+            </span>
         </div>
     );
 } ;
