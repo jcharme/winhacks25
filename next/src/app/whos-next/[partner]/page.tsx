@@ -12,7 +12,7 @@ interface Expense {
 
 const Expense = ({ email, amount }: {email:string, amount:number}) => {
   return (
-    <li className="rounded-lg bg-slate-500 w-full p-2 mb-2">
+    <li className="rounded-lg bg-blue-100 w-full p-2 mb-2">
       {email}: {amount}$
     </li>
   )
@@ -67,14 +67,15 @@ export default function Page({ params }: { params: Promise<{ partner: string }>}
   
     return (
       <div className="grid grid-cols-10">
-            <div id="user" className="col-span-3 h-screen bg-slate-200">
-              <h2>History with {partner}@{partner}.com</h2>
-              {user?.email ?? 'no user'}
-              <p className="text-xl text-center">{owe.toFixed(2)}$</p>
-              <p className="block">{owe < 0 ? 'Your turn!' : "Their treat!"}</p>
+            <div id="user" className="col-span-3 h-screen bg-blue-100 p-2">
+              <h2 className="text-xl">{user != null ? `signed in as ${user?.email}` : 'not signed in'} </h2>
+              <h2>viewing history with {partner}@{partner}.com</h2>
+              {/* { ?? 'no user'} */}
+              <p className="text-xl text-center mt-4">{owe.toFixed(2)}$</p>
+              <p className="block text-center">{owe < 0 ? 'Your turn!' : "Their treat!"}</p>
               <BarChart balance={owe} />
             </div>
-            <div id="expenses" className="col-start-4 col-span-7 h-screen bg-red-100">
+            <div id="expenses" className="col-start-4 col-span-7 h-screen bg-[#a2ccec]">
               <form onSubmit={handleSubmit} className="m-4 space-y-2">
                     <label className="block">
                         who?:
@@ -83,6 +84,7 @@ export default function Page({ params }: { params: Promise<{ partner: string }>}
                             name="email"
                             value={transaction.email}
                             onChange={handleChange}
+                            className="rounded-lg ml-2 p-1"
                         />
                     </label>
                     <label className="block">
@@ -92,6 +94,7 @@ export default function Page({ params }: { params: Promise<{ partner: string }>}
                             name="amount"
                             value={transaction.amount}
                             onChange={handleChange}
+                            className="rounded-lg ml-2 p-1"
                         />
                     </label>
                     <button type="submit">add</button>
