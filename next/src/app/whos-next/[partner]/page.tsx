@@ -70,7 +70,8 @@ export default function Page({ params }: { params: Promise<{ partner: string }>}
             <div id="user" className="col-span-3 h-screen bg-slate-200">
               <h2>History with {partner}@{partner}.com</h2>
               {user?.email ?? 'no user'}
-              <p>{owe.toFixed(2)}$</p>
+              <p className="text-xl text-center">{owe.toFixed(2)}$</p>
+              <p className="block">{owe < 0 ? 'Your turn!' : "Their treat!"}</p>
               <BarChart balance={owe} />
             </div>
             <div id="expenses" className="col-start-4 col-span-7 h-screen bg-red-100">
