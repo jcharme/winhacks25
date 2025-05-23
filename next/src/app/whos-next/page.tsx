@@ -1,11 +1,10 @@
 "use client";
 
-import { use, useEffect, useState } from "react"
+import { FormEvent, use, useEffect, useState } from "react"
 import Link from "next/link"
 import { auth, db } from "@lib/firebase"
 import { User } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { setgroups } from "process";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 
 interface Group {
     id: string;
@@ -20,6 +19,16 @@ export default function Page() {
         return () => unsub();
     }, []); // user may be null initially then update after page load
 
+    async function fetchGroups() {
+        const groupsRef = collection(db, "whos-next");
+        const q = query(groupsRef, where("users", "array-contains", user?.uid));
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map(doc => ({
+            id: doc.id, ...doc.data()
+        }));
+        setGroups(data);
+    }
+
     const [groups, setGroups] = useState<Group[] | null>([]);
     useEffect(() => {
         if (user === null) {
@@ -27,18 +36,21 @@ export default function Page() {
             return;
         }
 
-        async function fetchGroups() {
-            const groupsRef = collection(db, "whos-next");
-            const q = query(groupsRef, where("users", "array-contains", user?.uid));
-            const snapshot = await getDocs(q);
-            const data = snapshot.docs.map(doc => ({
-                id: doc.id, ...doc.data()
-            }));
-            setGroups(data);
-        }
-
         fetchGroups();
     }, [user?.uid]);
+
+    const [groupName, setGroupName] = useState("");
+    async function createGroup(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        const groupsRef = collection(db, "whos-next");
+        const docRef = await addDoc(groupsRef, {
+            name: groupName,
+            users: [user?.uid]
+        });
+
+        fetchGroups(); // reload the groups
+    }
 
     return (
         <>
@@ -47,7 +59,13 @@ export default function Page() {
             <Link href="/login">Please login here.</Link>
             :
             <div>
-                <div>creating groups goes here</div>
+                <form onSubmit={createGroup}>
+                    <button type="submit">Create group</button>
+                    <input 
+                        type="text" placeholder="Group name..."
+                        onChange={(e) => {setGroupName(e.target.value)}}
+                    />
+                </form>
                 <div>
                     {
                         groups?.length !== 0 ?
