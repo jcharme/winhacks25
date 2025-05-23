@@ -52,7 +52,11 @@ export default function Page() {
                     {
                         groups?.length !== 0 ?
                         <ul>
-                            
+                            {groups?.map(group => (
+                                <li key={group.id}>
+                                    {group.name}
+                                </li>
+                            ))}
                         </ul> : <p>No groups loaded.</p>
                     }
                 </div>
