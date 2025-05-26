@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, use, useEffect, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import Link from "next/link"
 import { auth, db } from "@lib/firebase"
 import { User } from "firebase/auth";
@@ -19,16 +19,6 @@ export default function Page() {
         return () => unsub();
     }, []); // user may be null initially then update after page load
 
-    async function fetchGroups() {
-        const groupsRef = collection(db, "whos-next");
-        const q = query(groupsRef, where("users", "array-contains", user?.uid));
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map(doc => ({
-            id: doc.id, ...doc.data()
-        }));
-        setGroups(data);
-    }
-
     const [groups, setGroups] = useState<Group[] | null>([]);
     useEffect(() => {
         if (user === null) {
@@ -36,20 +26,40 @@ export default function Page() {
             return;
         }
 
+        async function fetchGroups() {
+            const groupsRef = collection(db, "whos-next");
+            const q = query(groupsRef, where("users", "array-contains", user?.uid));
+            const snapshot = await getDocs(q);
+            const data = snapshot.docs.map(doc => ({
+                id: doc.id, ...doc.data()
+            }));
+
+            setGroups(data);
+        }
+
         fetchGroups();
-    }, [user?.uid]);
+    }, [user]);
 
     const [groupName, setGroupName] = useState("");
     async function createGroup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const groupsRef = collection(db, "whos-next");
-        const docRef = await addDoc(groupsRef, {
-            name: groupName,
-            users: [user?.uid]
-        });
+        if (!user?.uid) {
+            console.error("User must be logged in.");
+            return;
+        }
 
-        fetchGroups(); // reload the groups
+        const groupData: Omit<Group, 'id'> = {
+            name: groupName,
+            users: [user.uid]
+        };
+
+        const groupsRef = collection(db, "whos-next");
+        await addDoc(groupsRef, groupData).then(doc => {
+           setGroups(prev => prev ? [
+                ...prev, {id: doc.id, ...groupData}
+            ] : [{id: doc.id, ...groupData}])
+        }); // add new group to our list
     }
 
     return (
