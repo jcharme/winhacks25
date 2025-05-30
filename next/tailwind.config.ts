@@ -21,6 +21,7 @@ export default {
           800: "var(--text-800)",
           900: "var(--text-900)",
           950: "var(--text-950)",
+          DEFAULT: "var(--text)",
         },
         background: {
           50: "var(--background-50)",
@@ -34,6 +35,7 @@ export default {
           800: "var(--background-800)",
           900: "var(--background-900)",
           950: "var(--background-950)",
+          DEFAULT: "var(--background)",
         },
         primary: {
           50: "var(--primary-50)",
@@ -47,6 +49,7 @@ export default {
           800: "var(--primary-800)",
           900: "var(--primary-900)",
           950: "var(--primary-950)",
+          DEFAULT: "var(--primary)",
         },
         secondary: {
           50: "var(--secondary-50)",
@@ -60,6 +63,7 @@ export default {
           800: "var(--secondary-800)",
           900: "var(--secondary-900)",
           950: "var(--secondary-950)",
+          DEFAULT: "var(--secondary)",
         },
         accent: {
           50: "var(--accent-50)",
@@ -73,6 +77,7 @@ export default {
           800: "var(--accent-800)",
           900: "var(--accent-900)",
           950: "var(--accent-950)",
+          DEFAULT: "var(--accent)",
         },
       },
     },
