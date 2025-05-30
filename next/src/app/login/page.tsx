@@ -1,7 +1,8 @@
 "use client";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
-import { auth } from "@lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "@lib/firebase"
 
 export default function Login() {
     const [user, setUser] = useState<User | null>(null);
@@ -11,7 +12,10 @@ export default function Login() {
         password: '',
     })
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const [username, setUsername] = useState("");
+    const [name, setName] = useState("");
+
+    const handleCredentialsChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setCredentials((prev) => ({
             ...prev, [name]: value,
@@ -23,7 +27,12 @@ export default function Login() {
         if (action == 'signup') {
             createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
                 .then((userCredential) => {
-                    setUser(userCredential.user);
+                    const user = userCredential.user;
+                    setUser(user);
+
+                    return setDoc(doc(db, "users", user.uid), {
+                        email: user.email, name, username                 
+                    });
                 })
                 .catch((error) => {
                     const errCode = error.code;
@@ -63,13 +72,35 @@ export default function Login() {
                         <option value="login">Login</option>
                         <option value="signup">Sign up</option>
                     </select>
+                    {
+                        action == "signup" ? <>
+                            <label className="block">
+                                Username:
+                                <input
+                                    type="text"
+                                    name="username"
+                                    value={username}
+                                    onChange={(change) => {setUsername(change.target.value)}}
+                                />
+                            </label>
+                            <label className="block">
+                                Name:
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={name}
+                                    onChange={(change) => {setName(change.target.value)}}
+                                />
+                            </label>
+                        </> : null
+                    }
                     <label className="block">
                         Email:
                         <input
                             type="email"
                             name="email"
                             value={credentials.email}
-                            onChange={handleChange}
+                            onChange={handleCredentialsChange}
                         />
                     </label>
                     <label className="block">
@@ -78,7 +109,7 @@ export default function Login() {
                             type="password"
                             name="password"
                             value={credentials.password}
-                            onChange={handleChange}
+                            onChange={handleCredentialsChange}
                         />
                     </label>
                     <button type="submit">Click to {action}</button>
