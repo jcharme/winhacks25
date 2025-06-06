@@ -1,7 +1,10 @@
 "use client";
 import { ChangeEvent, FormEvent, useState } from "react";
 import {
+  browserLocalPersistence,
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
+  setPersistence,
   signInWithEmailAndPassword,
   signOut,
   User,
@@ -23,12 +26,16 @@ const Login = ({
     email: "",
     password: "",
   });
+  const [persist, setPersist] = useState(true);
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!data?.email || !data?.password) return;
-    signInWithEmailAndPassword(auth, data.email, data.password)
+    setPersistence(auth, persist ? browserLocalPersistence : browserSessionPersistence)
+      .then(() => {
+        return signInWithEmailAndPassword(auth, data.email, data.password);
+      })
       .then((userCredential) => {
         setUser(userCredential.user);
       })
@@ -56,7 +63,7 @@ const Login = ({
       <label className="block">
         <span className="block font-medium">Email</span>
         <input
-          className="bg-transparent px-2 rounded border border-text placeholder-text-600"
+          className="bg-transparent w-full px-2 rounded border border-text placeholder-text-600"
           type="email"
           name="email"
           placeholder="example@example.com"
@@ -78,7 +85,13 @@ const Login = ({
       <span>
         <hr className="border-t border-text opacity-50 -mx-4 mt-4" />
       </span>
+      <div>
+      <label className="block">
+        <input type="checkbox" name="remember me" checked={persist} onChange={() => {setPersist(!persist); }} />
+        <span className="ml-1">Remember me?</span>
+      </label>
       <button type="submit">Login</button>
+      </div>
     </form>
   );
 };
