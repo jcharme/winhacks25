@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import {
   browserLocalPersistence,
   browserSessionPersistence,
@@ -32,7 +32,10 @@ const Login = ({
     e.preventDefault();
 
     if (!data?.email || !data?.password) return;
-    setPersistence(auth, persist ? browserLocalPersistence : browserSessionPersistence)
+    setPersistence(
+      auth,
+      persist ? browserLocalPersistence : browserSessionPersistence
+    )
       .then(() => {
         return signInWithEmailAndPassword(auth, data.email, data.password);
       })
@@ -86,11 +89,18 @@ const Login = ({
         <hr className="border-t border-text opacity-50 -mx-4 mt-4" />
       </span>
       <div>
-      <label className="block">
-        <input type="checkbox" name="remember me" checked={persist} onChange={() => {setPersist(!persist); }} />
-        <span className="ml-1">Remember me?</span>
-      </label>
-      <button type="submit">Login</button>
+        <label className="block">
+          <input
+            type="checkbox"
+            name="remember me"
+            checked={persist}
+            onChange={() => {
+              setPersist(!persist);
+            }}
+          />
+          <span className="ml-1">Remember me?</span>
+        </label>
+        <button type="submit">Login</button>
       </div>
     </form>
   );
@@ -180,14 +190,10 @@ const Signup = () => {
 
 export default function Account() {
   const [user, setUser] = useState<User | null>(null);
-  //   const [action, setAction] = useState<"login" | "signup">("signup");
-  //   const [credentials, setCredentials] = useState({
-  //     email: "",
-  //     password: "",
-  //   });
-
-  //   const [username, setUsername] = useState("");
-  //   const [name, setName] = useState("");
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged(setUser);
+    return () => unsub();
+  }, []); // user may be null initially then update after page load
 
   const handleSignOut = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
