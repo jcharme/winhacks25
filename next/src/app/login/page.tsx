@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@lib/firebase";
+import ArrowButton from "@/components/ArrowButton";
 
 interface LoginData {
   email: string;
@@ -100,7 +101,7 @@ const Login = ({
           />
           <span className="ml-1">Remember me?</span>
         </label>
-        <button type="submit">Login</button>
+        <ArrowButton type="submit">Login</ArrowButton>
       </div>
     </form>
   );
