@@ -71,7 +71,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root { /*
       --text: #c6c4c3;
       --text-50: #0d0d0c;
       --text-100: #1a1919;
@@ -136,7 +136,7 @@
       --accent-800: #f7afa1;
       --accent-900: #fbd7d0;
       --accent-950: #fdebe8;
-    }
+    */ }
   }
 }
 
