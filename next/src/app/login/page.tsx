@@ -12,6 +12,7 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@lib/firebase";
 import ArrowButton from "@/components/ArrowButton";
+import { Preahvihear } from "next/font/google";
 
 interface LoginData {
   email: string;
@@ -61,9 +62,9 @@ const Login = ({
   return (
     <form
       onSubmit={handleLogin}
-      className="bg-background px-12 py-8 space-y-2 border rounded w-fit shadow"
+      className="bg-background w-96 px-12 py-8 space-y-2 border rounded shadow"
     >
-      <h1 className="text-xl px-8 font-semibold">Login to your account</h1>
+      <h1 className="text-xl font-semibold">Login to your account</h1>
       <label className="block">
         <span className="block font-medium">Email</span>
         <input
@@ -89,7 +90,8 @@ const Login = ({
       <span>
         <hr className="border-t border-text opacity-50 -mx-4 mt-4" />
       </span>
-      <div>
+      <div className="flex justify-between items-center">
+        <ArrowButton type="submit">Login</ArrowButton>
         <label className="block">
           <input
             type="checkbox"
@@ -101,7 +103,6 @@ const Login = ({
           />
           <span className="ml-1">Remember me?</span>
         </label>
-        <ArrowButton type="submit">Login</ArrowButton>
       </div>
     </form>
   );
@@ -123,29 +124,32 @@ const Signup = ({
   const [data, setData] = useState<SignupData>({
     name: {
       first: "",
-      last:  ""
+      last: "",
     },
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
   const [persist, setPersist] = useState(true);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(!data?.email || !data?.username || !data?.password || !data?.name?.first || !data?.name?.last) return;
+    if (
+      !data?.email ||
+      !data?.username ||
+      !data?.password ||
+      !data?.name?.first ||
+      !data?.name?.last
+    )
+      return;
 
     setPersistence(
       auth,
       persist ? browserLocalPersistence : browserSessionPersistence
     )
       .then(() => {
-        return createUserWithEmailAndPassword(
-          auth,
-          data.email,
-          data.password
-        )
+        return createUserWithEmailAndPassword(auth, data.email, data.password);
       })
       .then((userCredential) => {
         const user = userCredential.user;
@@ -155,7 +159,7 @@ const Signup = ({
           email: user.email,
           name: {
             first: data.name.first,
-            last: data.name.last
+            last: data.name.last,
           },
           username: data.username,
         });
@@ -167,49 +171,104 @@ const Signup = ({
       });
   };
 
+  const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setData((prev) => {
+      if (name === "first" || name === "last") {
+        return {
+          ...prev,
+          name: {
+            ...prev.name,
+            [name]: value,
+          },
+        };
+      }
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
   return (
-    <form>
-      {/* <label className="block">
-            Username:
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={(change) => {
-                setUsername(change.target.value);
-              }}
-            />
-          </label>
-          <label className="block">
-            Name:
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={(change) => {
-                setName(change.target.value);
-              }}
-            />
-          </label>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-background w-96 px-12 py-8 space-y-2 border rounded shadow"
+    >
+      <h1 className="text-xl font-semibold">Sign up</h1>
       <label className="block">
-        Email:
+        <span className="block font-medium">Name</span>
+        <div className="flex gap-2">
+          <input
+            className="bg-transparent w-full px-2 rounded border border-text placeholder-text-600"
+            type="text"
+            name="first"
+            placeholder="First"
+            value={data.name.first}
+            onChange={handleFieldChange}
+          />
+          <input
+            className="bg-transparent w-full px-2 rounded border border-text placeholder-text-600"
+            type="text"
+            name="last"
+            placeholder="Last"
+            value={data.name.last}
+            onChange={handleFieldChange}
+          />
+        </div>
+      </label>
+
+      <label className="block">
+        <span className="block font-medium">Username</span>
         <input
+          className="bg-transparent w-full px-2 rounded border border-text placeholder-text-600"
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={data.username}
+          onChange={handleFieldChange}
+        />
+      </label>
+      <label className="block">
+        <span className="block font-medium">Email</span>
+        <input
+          className="bg-transparent w-full px-2 rounded border border-text placeholder-text-600"
           type="email"
           name="email"
-          value={credentials.email}
-          onChange={handleCredentialsChange}
+          placeholder="example@example.com"
+          value={data.email}
+          onChange={handleFieldChange}
         />
       </label>
-      <label className="block">
-        Password:
+      <label className="block font-medium">
+        <span className="block">Password</span>
         <input
+          className="bg-transparent w-full px-2 rounded border border-text placeholder-text-500"
           type="password"
           name="password"
-          value={credentials.password}
-          onChange={handleCredentialsChange}
+          placeholder="••••••••"
+          value={data.password}
+          onChange={handleFieldChange}
         />
       </label>
-      <button type="submit">Click to {action}</button> */}
+      <span>
+        <hr className="border-t border-text opacity-50 -mx-4 mt-4" />
+      </span>
+
+      <div className="flex justify-between items-center">
+        <ArrowButton type="submit">Sign up</ArrowButton>
+        <label className="block">
+          <input
+            type="checkbox"
+            name="remember me"
+            checked={persist}
+            onChange={() => {
+              setPersist(!persist);
+            }}
+          />
+          <span className="ml-1">Remember me?</span>
+        </label>
+      </div>
     </form>
   );
 };
@@ -242,7 +301,7 @@ export default function Account() {
             </div>
           </div>
           <div className="bg-secondary rounded-bl-xl w-[50vw] h-screen flex place-items-center justify-center">
-            <Login setUser={setUser} />
+            <Signup setUser={setUser} />
           </div>
         </div>
       ) : (
