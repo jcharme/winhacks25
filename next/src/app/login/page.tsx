@@ -115,24 +115,49 @@ interface SignupData extends LoginData {
   username: string;
 }
 
-const Signup = () => {
-  const [data, setData] = useState<SignupData>();
+const Signup = ({
+  setUser,
+}: {
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}) => {
+  const [data, setData] = useState<SignupData>({
+    name: {
+      first: "",
+      last:  ""
+    },
+    username: "",
+    email: "",
+    password: ""
+  });
+  const [persist, setPersist] = useState(true);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(
+
+    if(!data?.email || !data?.username || !data?.password || !data?.name?.first || !data?.name?.last) return;
+
+    setPersistence(
       auth,
-      credentials.email,
-      credentials.password
+      persist ? browserLocalPersistence : browserSessionPersistence
     )
+      .then(() => {
+        return createUserWithEmailAndPassword(
+          auth,
+          data.email,
+          data.password
+        )
+      })
       .then((userCredential) => {
         const user = userCredential.user;
         setUser(user);
 
         return setDoc(doc(db, "users", user.uid), {
           email: user.email,
-          name,
-          username,
+          name: {
+            first: data.name.first,
+            last: data.name.last
+          },
+          username: data.username,
         });
       })
       .catch((error) => {
