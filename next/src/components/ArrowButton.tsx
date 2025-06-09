@@ -26,9 +26,9 @@ type ArrowButtonProps = {
 
 const ArrowButton = ({children, ...rest}: ArrowButtonProps) => {
   return (
-    <button className="relative h-6 w-fit flex items-center border border-text rounded-3xl box-border" {...rest}>
-      <span className="text-lg pl-7 pr-1">{children}</span>
-      <ModifiedArrowRightCircleIcon className="size-6 text-primary absolute -z-10" />
+    <button className="relative h-6 w-fit flex items-center border border-text rounded-3xl overflow-hidden" {...rest}>
+      <span className="pl-7 pr-2">{children}</span>
+      <ModifiedArrowRightCircleIcon className="size-6 text-primary absolute z-0" />
     </button>
   );
 };
