@@ -12,7 +12,6 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@lib/firebase";
 import ArrowButton from "@/components/ArrowButton";
-import { Preahvihear } from "next/font/google";
 
 interface LoginData {
   email: string;
